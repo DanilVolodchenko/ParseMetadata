@@ -23,9 +23,10 @@ class ParseMetadata:
                   'Тип поля': 'type',
                   'Значение по умолчанию': 'default'}
         fields.update(self.__fields)
+
         return fields
 
-    def _parse_metadata(self, data: dict) -> dict:
+    def _parse_metadata(self, data: dict) -> None:
         """Преобразует метаданные. Оставляет только вложенные поля.
         Где metadata - данные, которые нужно обработать."""
 
@@ -36,14 +37,12 @@ class ParseMetadata:
             else:
                 self.data[field] = value
 
-        return self.data
-
     def write_data_to_file(self, parsed_metadata: dict, filename: str = 'test.txt') -> None:
         """Запись данных в файл в читаемом для пользователя виде.
         Где parsed_metadata - обработанные данные,
         filename - название файла в который буду записаны данные."""
 
-        with open(f'../{filename}', 'w') as file:
+        with open(f'{filename}', 'w') as file:
             for field, value in parsed_metadata.items():
                 file.write(f'Поле: {field}\n')
 
