@@ -43,7 +43,7 @@ class ParseMetadata:
         Где parsed_metadata - обработанные данные,
         filename - название файла в который буду записаны данные."""
 
-        with open(filename, 'w') as file:
+        with open(f'../{filename}', 'w') as file:
             for field, value in parsed_metadata.items():
                 file.write(f'Поле: {field}\n')
 
