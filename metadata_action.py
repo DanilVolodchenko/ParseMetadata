@@ -55,7 +55,6 @@ class MetadataAction:
         """Записывает полученные данные в файл. Где
         field - общее поле, data - данные этого поля,
         space - количество пробелов."""
-
         with open(f'{self.filename}.txt', 'a') as file:
             file.write(' ' * space + f'Поле {field}\n')
             for name, info in self.REQUIRED_FIELDS.items():
@@ -100,7 +99,8 @@ class MetadataAction:
         return isinstance(obj, Enum)
 
     def run(self) -> None:
-        """Точка входа в функцию."""
+        """Осуществляет взаимодействие с функциями:
+        _add_extra_fields и _parse_metadata."""
 
         if os.path.exists(f'{self.filename}.txt'):
             os.remove(f'{self.filename}.txt')
@@ -109,6 +109,6 @@ class MetadataAction:
 
 
 if __name__ == '__main__':
-    metadata = config.__metadata__()
+    metadata: dict = config.__metadata__()
     wm = MetadataAction(metadata, 'test')
     wm.run()
