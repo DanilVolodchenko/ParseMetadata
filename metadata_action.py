@@ -110,5 +110,5 @@ class MetadataAction:
 
 if __name__ == '__main__':
     metadata = config.__metadata__()
-    wm = MetadataAction(metadata, 'test', hint=True, secret=False, rule=False)
+    wm = MetadataAction(metadata, 'test')
     wm.run()
