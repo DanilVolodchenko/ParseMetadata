@@ -1,6 +1,6 @@
 import os
 from enum import Enum
-from typing import Any
+from typing import Optional
 from dataclasses import dataclass
 
 from config import config
@@ -26,13 +26,16 @@ class MetadataAction:
      args - дополнительные поля
      По дефолту получаемые поля находятся в REQUIRED_FIELDS.
     """
+
     REQUIRED_FIELDS = {}
 
-    def __init__(self, data: dict, filename: str, *,
-                 only_primitive: bool = False,
-                 label: bool = True, type: bool = True,
-                 default: bool = True, hint: bool = False,
-                 secret: bool = False, rule: bool = False):
+    def __init__(
+            self, data: dict, *, filename: str,
+            only_primitive: bool = False,
+            label: bool = True, type: bool = True,
+            default: bool = True, hint: bool = False,
+            secret: bool = False, rule: bool = False
+    ) -> None:
         self.metadata = data
         self.filename = filename
         self.only_primitive = only_primitive
@@ -51,30 +54,6 @@ class MetadataAction:
                 field = fields[num]
                 self.REQUIRED_FIELDS[field] = Fields.__getattribute__(Fields, field)
 
-    def _write_parsed_data_to_file(self, field: str, data: dict, space: int) -> None:
-        """Записывает полученные данные в файл. Где
-        field - общее поле, data - данные этого поля,
-        space - количество пробелов."""
-        with open(f'{self.filename}.txt', 'a') as file:
-            file.write(' ' * space + f'Поле {field}\n')
-            for name, info in self.REQUIRED_FIELDS.items():
-                data_value = data.get(name, 'Не установлено')
-
-                if self._is_enum_class(data_value):
-                    data_value = data.get(name).value
-
-                if not info == 'Ограничение' or data_value is not None:
-                    if 'Match' in f'{data_value}':
-                        data_value = 'Регулярное выражение ' + data_value
-
-                    if not data_value:
-                        data_value = 'Пусто'
-
-                    if info == 'Тип поля' and data.get('is_iterable') is True:
-                        data_value = 'tuple'
-
-                    file.write(' ' * (space + 4) + f'{info}: {data_value}\n')
-
     def _parse_metadata(self) -> None:
         """Разбирает данные и передает их функции write_parsed_data_to_file,
         которая в свою очередь их записывает."""
@@ -85,18 +64,71 @@ class MetadataAction:
 
             else:
                 self.metadata = data_field.get('type')
+
                 if not self.only_primitive:
-                    data_field.pop('type')  # убираю поле type чтобы не засорять txt файл
+                    data_field.pop('type')
                     self._write_parsed_data_to_file(field, data_field, self.space)
                     self.space += 4
+
                 self._parse_metadata()
                 self.space = 0
 
-    @staticmethod
-    def _is_enum_class(obj: Any) -> bool:
-        """Проверяет, является ли значение поля классом Enum."""
+    def _write_parsed_data_to_file(self, field: str, data: dict, space: int) -> None:
+        """Записывает полученные данные в файл. Где
+        field - общее поле, data - данные этого поля,
+        space - количество пробелов."""
 
-        return isinstance(obj, Enum)
+        with open(f'{self.filename}.txt', 'a') as file:
+            file.write(' ' * space + f'Поле {field}\n')
+            for name, info in self.REQUIRED_FIELDS.items():
+                value = self._get_value(name, data)
+
+                if value:
+                    file.write(' ' * (space + 4) + f'{info}: {value}\n')
+
+    def _get_value(self, name: str, data: dict) -> Optional[str]:
+        """Возвращает значение поля."""
+
+        data_value = data.get(name)
+
+        if isinstance(data_value, Enum):
+            data_value = data.get(name).value
+
+        if name == 'rule':
+            if data_value:
+                if 'Match' in f'{data_value}':
+                    return 'Регулярное выражение'
+                else:
+                    return data_value
+
+        else:
+            if name == 'type':
+                if data.get('is_iterable'):
+                    data_value = 'tuple'
+                data_value = self._get_type(data_value)
+
+            if name == 'secret':
+                if data.get(name):
+                    data_value = 'Да'
+                else:
+                    data_value = 'Нет'
+
+            if not data_value:
+                data_value = 'Значение не установлено'
+
+            return data_value
+
+    @staticmethod
+    def _get_type(value: str) -> str:
+        """Возвращает тип поля в понятном человеке виде."""
+
+        types = {'int': 'целочисленное',
+                 'str': 'строка',
+                 'bool': 'логическое',
+                 'float': 'вещественное',
+                 'tuple': 'кортеж'}
+
+        return types.get(value)
 
     def run(self) -> None:
         """Осуществляет взаимодействие с функциями:
@@ -110,5 +142,7 @@ class MetadataAction:
 
 if __name__ == '__main__':
     metadata: dict = config.__metadata__()
-    wm = MetadataAction(metadata, 'test')
+    wm = MetadataAction(metadata, filename='test',
+                        only_primitive=False, hint=True,
+                        secret=True, rule=True)
     wm.run()
