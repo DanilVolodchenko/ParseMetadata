@@ -34,12 +34,12 @@ class MetadataAction:
             only_primitive: bool = False,
             label: bool = True, type: bool = True,
             default: bool = True, hint: bool = False,
-            secret: bool = False, rule: bool = False
+            rule: bool = False
     ) -> None:
         self.metadata = data
         self.filename = filename
         self.only_primitive = only_primitive
-        self.fields = (label, type, default, hint, secret, rule)
+        self.fields = (label, type, default, hint, rule)
         self.space = 0
 
     def _add_extra_fields(self) -> None:
@@ -47,7 +47,7 @@ class MetadataAction:
         которые будут выведены в файл txt."""
 
         fields = ['label', 'type', 'default',
-                  'hint', 'secret', 'rule']
+                  'hint', 'rule']
 
         for num, is_field in enumerate(self.fields):
             if is_field:
@@ -88,7 +88,7 @@ class MetadataAction:
                         file.write(' ' * (self.space + 4) + f'{info}: {value}\n')
 
     def _get_value(self, name: str, data: dict) -> Optional[str]:
-        """Возвращает значение поля."""
+        """Возвращает значение какого-либо поля."""
 
         data_value = data.get(name)
 
@@ -108,15 +108,6 @@ class MetadataAction:
                     data_value = 'tuple'
                 data_value = self._get_type(data_value)
 
-            if name == 'secret':
-                if data.get(name):
-                    data_value = 'Да'
-                else:
-                    data_value = 'Нет'
-
-            if not data_value:
-                data_value = 'Значение не установлено'
-
             return data_value
 
     @staticmethod
@@ -128,8 +119,9 @@ class MetadataAction:
                  'bool': 'логическое',
                  'float': 'вещественное',
                  'tuple': 'кортеж'}
-
-        return types.get(value)
+        if value in types:
+            return types.get(value)
+        return value
 
     def run(self) -> None:
         """Осуществляет взаимодействие с функциями:
@@ -143,7 +135,7 @@ class MetadataAction:
 
 if __name__ == '__main__':
     metadata: dict = config.__metadata__()
-    wm = MetadataAction(metadata, filename='main',
+    wm = MetadataAction(metadata, filename='test',
                         only_primitive=False, hint=True,
-                        secret=True, rule=True)
+                        rule=True)
     wm.run()
