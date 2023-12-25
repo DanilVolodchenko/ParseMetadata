@@ -78,7 +78,7 @@ class MetadataAction:
             field - общее поле,
             data - данные этого поля"""
 
-        with open(f'{self.filename}.txt', 'a') as file:
+        with open(f'{self.filename}.txt', 'a', encoding='UTF-8') as file:
             if not data.get('secret'):
                 file.write(' ' * self.space + f'Поле {field}\n')
                 for name, info in self.REQUIRED_FIELDS.items():
@@ -143,7 +143,7 @@ class MetadataAction:
 
 if __name__ == '__main__':
     metadata: dict = config.__metadata__()
-    wm = MetadataAction(metadata, filename='test',
+    wm = MetadataAction(metadata, filename='main',
                         only_primitive=False, hint=True,
                         secret=True, rule=True)
     wm.run()
