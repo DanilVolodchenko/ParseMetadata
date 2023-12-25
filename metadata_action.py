@@ -79,12 +79,13 @@ class MetadataAction:
         space - количество пробелов."""
 
         with open(f'{self.filename}.txt', 'a') as file:
-            file.write(' ' * space + f'Поле {field}\n')
-            for name, info in self.REQUIRED_FIELDS.items():
-                value = self._get_value(name, data)
+            if not data.get('secret'):
+                file.write(' ' * space + f'Поле {field}\n')
+                for name, info in self.REQUIRED_FIELDS.items():
+                    value = self._get_value(name, data)
 
-                if value:
-                    file.write(' ' * (space + 4) + f'{info}: {value}\n')
+                    if value:
+                        file.write(' ' * (space + 4) + f'{info}: {value}\n')
 
     def _get_value(self, name: str, data: dict) -> Optional[str]:
         """Возвращает значение поля."""
