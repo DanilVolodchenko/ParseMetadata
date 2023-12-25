@@ -60,32 +60,32 @@ class MetadataAction:
 
         for field, data_field in self.metadata.items():
             if data_field.get('is_primitive'):
-                self._write_parsed_data_to_file(field, data_field, self.space)
+                self._write_parsed_data_to_file(field, data_field)
 
             else:
                 self.metadata = data_field.get('type')
 
                 if not self.only_primitive:
                     data_field.pop('type')
-                    self._write_parsed_data_to_file(field, data_field, self.space)
+                    self._write_parsed_data_to_file(field, data_field)
                     self.space += 4
 
                 self._parse_metadata()
                 self.space = 0
 
-    def _write_parsed_data_to_file(self, field: str, data: dict, space: int) -> None:
+    def _write_parsed_data_to_file(self, field: str, data: dict) -> None:
         """Записывает полученные данные в файл. Где
-        field - общее поле, data - данные этого поля,
-        space - количество пробелов."""
+            field - общее поле,
+            data - данные этого поля"""
 
         with open(f'{self.filename}.txt', 'a') as file:
             if not data.get('secret'):
-                file.write(' ' * space + f'Поле {field}\n')
+                file.write(' ' * self.space + f'Поле {field}\n')
                 for name, info in self.REQUIRED_FIELDS.items():
                     value = self._get_value(name, data)
 
                     if value:
-                        file.write(' ' * (space + 4) + f'{info}: {value}\n')
+                        file.write(' ' * (self.space + 4) + f'{info}: {value}\n')
 
     def _get_value(self, name: str, data: dict) -> Optional[str]:
         """Возвращает значение поля."""
