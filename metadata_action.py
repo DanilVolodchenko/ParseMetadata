@@ -8,11 +8,11 @@ from config import config
 
 @dataclass(frozen=True)
 class Fields:
-    label: str = 'Описание поля'
-    type: str = 'Тип поля'
-    default: str = 'Значение по умолчанию'
-    hint: str = 'Подсказка'
-    rule: str = 'Ограничение'
+    label: str = "Описание поля"
+    type: str = "Тип поля"
+    default: str = "Значение по умолчанию"
+    hint: str = "Подсказка"
+    rule: str = "Ограничение"
 
 
 class MetadataAction:
@@ -29,11 +29,16 @@ class MetadataAction:
     REQUIRED_FIELDS = {}
 
     def __init__(
-            self, data: dict, *, filename: str,
-            only_primitive: bool = False,
-            label: bool = True, type: bool = True,
-            default: bool = True, hint: bool = False,
-            rule: bool = False
+        self,
+        data: dict,
+        *,
+        filename: str,
+        only_primitive: bool = False,
+        label: bool = True,
+        type: bool = True,
+        default: bool = True,
+        hint: bool = False,
+        rule: bool = False,
     ) -> None:
         self.metadata = data
         self.filename = filename
@@ -45,8 +50,7 @@ class MetadataAction:
         """Добавляет дополнительные требуемые поля в REQUIRED_FIELDS,
         которые будут выведены в файл txt."""
 
-        fields = ['label', 'type', 'default',
-                  'hint', 'rule']
+        fields = ["label", "type", "default", "hint", "rule"]
 
         for num, is_field in enumerate(self.fields):
             if is_field:
@@ -58,14 +62,14 @@ class MetadataAction:
         которая в свою очередь их записывает."""
 
         for field, data_field in self.metadata.items():
-            if data_field.get('is_primitive'):
+            if data_field.get("is_primitive"):
                 self._write_parsed_data_to_file(field, data_field)
 
             else:
-                self.metadata = data_field.get('type')
+                self.metadata = data_field.get("type")
 
                 if not self.only_primitive:
-                    data_field.pop('type')
+                    data_field.pop("type")
                     self._write_parsed_data_to_file(field, data_field)
                     self.space += 4
 
@@ -74,17 +78,17 @@ class MetadataAction:
 
     def _write_parsed_data_to_file(self, field: str, data: dict) -> None:
         """Записывает полученные данные в файл. Где
-            field - общее поле,
-            data - данные этого поля"""
+        field - общее поле,
+        data - данные этого поля"""
 
-        with open(f'{self.filename}.txt', 'a', encoding='UTF-8') as file:
-            if not data.get('secret'):
-                file.write(' ' * self.space + f'Поле {field}\n')
+        with open(f"{self.filename}.txt", "a", encoding="UTF-8") as file:
+            if not data.get("secret"):
+                file.write(" " * self.space + f"Поле {field}\n")
                 for name, info in self.REQUIRED_FIELDS.items():
                     value = self._get_value(name, data)
 
                     if value:
-                        file.write(' ' * (self.space + 4) + f'{info}: {value}\n')
+                        file.write(" " * (self.space + 4) + f"{info}: {value}\n")
 
     def _get_value(self, name: str, data: dict) -> Optional[str]:
         """Возвращает значение какого-либо поля."""
@@ -94,17 +98,17 @@ class MetadataAction:
         if isinstance(data_value, Enum):
             data_value = data.get(name).value
 
-        if name == 'rule':
+        if name == "rule":
             if data_value:
-                if 'Match' in f'{data_value}':
-                    return 'Регулярное выражение'
+                if "Match" in f"{data_value}":
+                    return "Регулярное выражение"
                 else:
                     return data_value
 
         else:
-            if name == 'type':
-                if data.get('is_iterable'):
-                    data_value = 'tuple'
+            if name == "type":
+                if data.get("is_iterable"):
+                    data_value = "tuple"
                 data_value = self._get_type(data_value)
 
             return data_value
@@ -113,11 +117,13 @@ class MetadataAction:
     def _get_type(value: str) -> str:
         """Возвращает тип поля в понятном человеке виде."""
 
-        types = {'int': 'целочисленное',
-                 'str': 'строка',
-                 'bool': 'логическое',
-                 'float': 'вещественное',
-                 'tuple': 'кортеж'}
+        types = {
+            "int": "целочисленное",
+            "str": "строка",
+            "bool": "логическое",
+            "float": "вещественное",
+            "tuple": "кортеж",
+        }
         if value in types:
             return types.get(value)
         return value
@@ -127,17 +133,15 @@ class MetadataAction:
         _add_extra_fields и _parse_metadata."""
 
         try:
-            if os.path.exists(f'{self.filename}.txt'):
-                os.remove(f'{self.filename}.txt')
+            if os.path.exists(f"{self.filename}.txt"):
+                os.remove(f"{self.filename}.txt")
             self._add_extra_fields()
             self._parse_metadata()
         except Exception as ex:
-            print(f'Что-то пошло не по плану: {ex}')
+            print(f"Что-то пошло не по плану: {ex}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     metadata = config.__metadata__()
-    wm = MetadataAction(metadata, filename='test',
-                        only_primitive=False, hint=True,
-                        rule=True)
+    wm = MetadataAction(metadata, filename="test", only_primitive=False, hint=True, rule=True)
     wm.run()
