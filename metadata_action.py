@@ -12,7 +12,6 @@ class Fields:
     type: str = 'Тип поля'
     default: str = 'Значение по умолчанию'
     hint: str = 'Подсказка'
-    secret: str = 'Секретное ли поле'
     rule: str = 'Ограничение'
 
 
@@ -127,14 +126,17 @@ class MetadataAction:
         """Осуществляет взаимодействие с функциями:
         _add_extra_fields и _parse_metadata."""
 
-        if os.path.exists(f'{self.filename}.txt'):
-            os.remove(f'{self.filename}.txt')
-        self._add_extra_fields()
-        self._parse_metadata()
+        try:
+            if os.path.exists(f'{self.filename}.txt'):
+                os.remove(f'{self.filename}.txt')
+            self._add_extra_fields()
+            self._parse_metadata()
+        except Exception as ex:
+            print(f'Что-то пошло не по плану: {ex}')
 
 
 if __name__ == '__main__':
-    metadata: dict = config.__metadata__()
+    metadata = config.__metadata__()
     wm = MetadataAction(metadata, filename='test',
                         only_primitive=False, hint=True,
                         rule=True)
