@@ -29,16 +29,16 @@ class MetadataAction:
     REQUIRED_FIELDS = {}
 
     def __init__(
-        self,
-        data: dict,
-        *,
-        filename: str,
-        only_primitive: bool = False,
-        label: bool = True,
-        type: bool = True,
-        default: bool = True,
-        hint: bool = False,
-        rule: bool = False,
+            self,
+            data: dict,
+            *,
+            filename: str,
+            only_primitive: bool = False,
+            label: bool = True,
+            type: bool = True,
+            default: bool = True,
+            hint: bool = False,
+            rule: bool = False,
     ) -> None:
         self.metadata = data
         self.filename = filename
