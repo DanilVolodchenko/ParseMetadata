@@ -5,67 +5,78 @@ import pytest
 def data_for_parse():
     """Выводит сгенерированные метаданные."""
 
-    data = {'common': {'hint': 'Сюда вписывать примитивы',
-                       'is_iterable': False,
-                       'is_primitive': False,
-                       'label': 'Общие поля для примера',
-                       'name': 'common',
-                       'password': False,
-                       'secret': False,
-                       'type': {'int_field': {'default': 220,
-                                              'hint': 'Записывается сюда какое-то '
-                                                      'значение целочисленное',
-                                              'is_iterable': False,
-                                              'is_primitive': True,
-                                              'label': 'Интовое поле',
-                                              'name': 'int_field',
-                                              'password': False,
-                                              'rule': None,
-                                              'secret': False,
-                                              'type': 'int'},
-                                'string': {'default': 'STR',
-                                           'hint': 'Используется для хранения строки',
-                                           'is_iterable': False,
-                                           'is_primitive': True,
-                                           'label': 'Строчный тип типа',
-                                           'name': 'string',
-                                           'password': False,
-                                           'rule': None,
-                                           'secret': False,
-                                           'type': 'str'},
-                                'tuple_field': {'default': (False, True, True),
-                                                'hint': '',
-                                                'is_iterable': True,
-                                                'is_primitive': True,
-                                                'label': 'Кортеж',
-                                                'name': 'tuple_field',
-                                                'password': False,
-                                                'rule': None,
-                                                'secret': False,
-                                                'type': 'bool'}
-                                }
-                       },
-            'custom_default': {'hint': '',
-                               'is_iterable': False,
-                               'is_primitive': False,
-                               'label': 'Кастомное дефолт значение 1',
-                               'name': 'custom_default',
-                               'password': False,
-                               'secret': False,
-                               'type': {'default_1234': {'default': 1111,
-                                                         'hint': '',
-                                                         'is_iterable': False,
-                                                         'is_primitive': True,
-                                                         'label': 'Тут должно было быть '
-                                                                  '1234',
-                                                         'name': 'default_1234',
-                                                         'password': False,
-                                                         'rule': None,
-                                                         'secret': False,
-                                                         'type': 'int'}
-                                        }
-                               }
-            }
+    data = {
+        'common': {
+            'hint': 'Сюда вписывать примитивы',
+            'is_iterable': False,
+            'is_primitive': False,
+            'label': 'Общие поля для примера',
+            'name': 'common',
+            'password': False,
+            'secret': False,
+            'type': {
+                'int_field': {
+                    'default': 220,
+                    'hint': 'Записывается сюда какое-то ' 'значение целочисленное',
+                    'is_iterable': False,
+                    'is_primitive': True,
+                    'label': 'Интовое поле',
+                    'name': 'int_field',
+                    'password': False,
+                    'rule': None,
+                    'secret': False,
+                    'type': 'int',
+                },
+                'string': {
+                    'default': 'STR',
+                    'hint': 'Используется для хранения строки',
+                    'is_iterable': False,
+                    'is_primitive': True,
+                    'label': 'Строчный тип типа',
+                    'name': 'string',
+                    'password': False,
+                    'rule': None,
+                    'secret': False,
+                    'type': 'str',
+                },
+                'tuple_field': {
+                    'default': (False, True, True),
+                    'hint': '',
+                    'is_iterable': True,
+                    'is_primitive': True,
+                    'label': 'Кортеж',
+                    'name': 'tuple_field',
+                    'password': False,
+                    'rule': None,
+                    'secret': False,
+                    'type': 'bool',
+                },
+            },
+        },
+        'custom_default': {
+            'hint': '',
+            'is_iterable': False,
+            'is_primitive': False,
+            'label': 'Кастомное дефолт значение 1',
+            'name': 'custom_default',
+            'password': False,
+            'secret': False,
+            'type': {
+                'default_1234': {
+                    'default': 1111,
+                    'hint': '',
+                    'is_iterable': False,
+                    'is_primitive': True,
+                    'label': 'Тут должно было быть ' '1234',
+                    'name': 'default_1234',
+                    'password': False,
+                    'rule': None,
+                    'secret': False,
+                    'type': 'int',
+                }
+            },
+        },
+    }
 
     return data
 
@@ -97,7 +108,8 @@ def expected_data_for_parse():
         '    Поле default_1234\n'
         '        Описание поля: Тут должно было быть 1234\n'
         '        Тип поля: целочисленное\n'
-        '        Значение по умолчанию: 1111\n')
+        '        Значение по умолчанию: 1111\n'
+    )
 
     return expected_data
 
@@ -124,6 +136,7 @@ def expected_data_for_parse_only_primitive():
         'Поле default_1234\n'
         '    Описание поля: Тут должно было быть 1234\n'
         '    Тип поля: целочисленное\n'
-        '    Значение по умолчанию: 1111\n')
+        '    Значение по умолчанию: 1111\n'
+    )
 
     return expected_data
