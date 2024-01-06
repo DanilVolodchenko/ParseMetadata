@@ -39,7 +39,6 @@ class TestMetadataAction:
     @pytest.mark.parametrize(
         'interface',
         [
-            'REQUIRED_FIELDS',
             '_add_extra_fields',
             '_parse_metadata',
             '_write_parsed_data_to_file',
@@ -54,7 +53,7 @@ class TestMetadataAction:
         attrs_and_methods = MetadataAction.__dict__
         assert (
             interface in attrs_and_methods
-        ), 'Атрибута REQUIRED_FIELDS нет в классе MetadataAction'
+        ), f'Атрибута {interface} нет в классе MetadataAction'
 
     @pytest.mark.parametrize(
         'metadata, expected_length, expected_result',
@@ -69,7 +68,7 @@ class TestMetadataAction:
         после вызова функции _add_extra_fields."""
 
         metadata._add_extra_fields()
-        result = metadata.REQUIRED_FIELDS
+        result = metadata.required_fields
         result_length = len(result)
 
         assert (

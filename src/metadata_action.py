@@ -26,7 +26,6 @@ class MetadataAction:
      По дефолту получаемые поля находятся в REQUIRED_FIELDS.
     """
 
-    REQUIRED_FIELDS = {}
 
     def __init__(
         self,
@@ -44,6 +43,7 @@ class MetadataAction:
         self.filename = filename
         self.only_primitive = only_primitive
         self.fields = (label, type, default, hint, rule)
+        self.required_fields = {}
         self.space = 0
 
     def get_filename(self):
@@ -68,7 +68,7 @@ class MetadataAction:
         for num, is_field in enumerate(self.fields):
             if is_field:
                 field = fields[num]
-                self.REQUIRED_FIELDS[field] = Fields.__getattribute__(Fields, field)
+                self.required_fields[field] = Fields.__getattribute__(Fields, field)
 
     def _parse_metadata(self) -> None:
         """Разбирает данные и передает их функции write_parsed_data_to_file,
@@ -97,7 +97,7 @@ class MetadataAction:
         with open(f'{self.filename}', 'a', encoding='UTF-8') as file:
             if not data.get('secret'):
                 file.write(' ' * self.space + f'Поле {field}\n')
-                for name, info in self.REQUIRED_FIELDS.items():
+                for name, info in self.required_fields.items():
                     value = self._get_value(name, data)
 
                     if value:
