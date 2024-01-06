@@ -132,5 +132,5 @@ class DevEnv(Parametrica):
     is_dev = Field[bool](False).label("Использовать окружение разработчика")
 
 
-config = Config(YAMLFileConfigIO("settings.yaml"))
-dev_env = DevEnv(VirtualYAMLFileConfigIO("dev.env"))
+config = Config(YAMLFileConfigIO("../ParseMetadata_settings.yaml"))
+dev_env = DevEnv(VirtualYAMLFileConfigIO("../dev.env"))

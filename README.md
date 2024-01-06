@@ -27,13 +27,13 @@
 
 ## Запуск тестов
 
-Тестирование написано с помощью библиотеки `pytest`, для запуска тестов прописываем в
-директории, где находится файл `test.py` команду: `pytest test.py`.
+Тестирование написано с помощью библиотеки `pytest`, для запуска тестов прописываем
+команду: `pytest -svv tests/test_MetadataAction.py`.
 
 ### Пример кода
 
 ```python
-from metadata_action import MetadataAction
+from src.metadata_action import MetadataAction
 from config import config
 
 metadata = config.__metadata__()
