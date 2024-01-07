@@ -1,5 +1,7 @@
 import pytest
 
+from src.metadata_action import MetadataAction
+
 
 @pytest.fixture()
 def data_for_parse():
@@ -140,3 +142,10 @@ def expected_data_for_parse_only_primitive():
     )
 
     return expected_data
+
+
+@pytest.fixture(scope='class')
+def metadata():
+    """Возвращает экземпляр класса Metadata."""
+
+    return MetadataAction({}, filename='', hint=True, rule=True)
