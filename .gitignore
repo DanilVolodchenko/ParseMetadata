@@ -1,8 +1,7 @@
 .idea/
 env/
+venv/
 __pycache__/
 */__pycache__/
-__pycache__
 *.txt
 *.yaml
-.flake8

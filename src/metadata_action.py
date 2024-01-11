@@ -45,6 +45,17 @@ class MetadataAction:
         self.required_fields = {}
         self.space = 0
 
+    def __repr__(self):
+        return (f'{self.__class__.__name__}('
+                f'metadata={self.metadata},\n '
+                f'filename={self.filename}, '
+                f'only_primitive={self.only_primitive}, '
+                f'label={self.fields[0]}, '
+                f'type={self.fields[1]}, ' 
+                f'default={self.fields[2]}, '
+                f'hint={self.fields[3]}, '
+                f'rule={self.fields[4]})')
+
     def get_filename(self):
         return self._filename
 
@@ -52,7 +63,7 @@ class MetadataAction:
         """Когда передается имя файла в filename, то проверяется,
         передалось ли расширение в имя файла."""
         if value.split('.')[-1] == 'txt':
-            self._filename = f'{value}'
+            self._filename = value
         else:
             self._filename = f'{value}.txt'
 
@@ -93,7 +104,7 @@ class MetadataAction:
         field - общее поле,
         data - данные этого поля."""
 
-        with open(f'{self.filename}', 'a', encoding='UTF-8') as file:
+        with open(self.filename, 'a', encoding='UTF-8') as file:
             if not data.get('secret'):
                 file.write(' ' * self.space + f'Поле {field}\n')
                 for name, info in self.required_fields.items():
@@ -145,8 +156,8 @@ class MetadataAction:
         _add_extra_fields и _parse_metadata."""
 
         try:
-            if os.path.exists(f'{self.filename}.txt'):
-                os.remove(f'{self.filename}.txt')
+            if os.path.exists(f'{self.filename}'):
+                os.remove(f'{self.filename}')
             self._add_extra_fields()
             self._parse_metadata()
         except Exception as ex:

@@ -20,9 +20,7 @@ class TestMetadataAction:
         """Проверяет наличие свойств и методов класса."""
 
         attrs_and_methods = MetadataAction.__dict__
-        assert (
-                interface in attrs_and_methods
-        ), f'Атрибута {interface} нет в классе MetadataAction'
+        assert (interface in attrs_and_methods), f'Атрибута {interface} нет в классе MetadataAction'
 
     @pytest.mark.parametrize('metadata, expected_length, expected_result', data_for_add_extra_fields())
     def test_add_extra_fields(self, metadata, expected_length, expected_result):

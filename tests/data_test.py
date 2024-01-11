@@ -20,6 +20,7 @@ data_for_interface: List[str] = [
 ]
 
 data_for_get_value: List[Tuple[str, Dict[str, str], str]] = [
+    # name, data, expected_result
     ('rule', {'rule': 'Test value'}, 'Test value'),
     ('rule', {'rule': 'Match([A-Za-z1-9].#$)'}, 'Регулярное выражение'),
     ('test', {'test': EnumTestClass.value3}, 'TestValue3'),
@@ -30,6 +31,7 @@ data_for_get_value: List[Tuple[str, Dict[str, str], str]] = [
 ]
 
 data_for_get_type: List[Tuple[str, str]] = [
+    # value, expected_result
     ('int', 'целочисленное'),
     ('str', 'строка'),
     ('bool', 'логическое'),
@@ -39,6 +41,7 @@ data_for_get_type: List[Tuple[str, str]] = [
 ]
 
 data_for_write_parsed_data_to_file: List[Tuple[str, dict, str, int]] = [
+    # field, data, expected_result, expected_file_size
     (
         'common',
         {'hint': 'Test hint', 'label': 'Test label', 'secret': False},
@@ -77,6 +80,7 @@ def data_for_add_extra_fields() -> List[Tuple[MetadataAction, int, Dict[str, str
     }
 
     data = [
+        # metadata, expected_length, expected_result
         (metadata_default, 3, expected_fields_default),
         (metadata_only_primitive, 3, expected_fields_default),
         (metadata_full, 5, expected_fields_extra),
